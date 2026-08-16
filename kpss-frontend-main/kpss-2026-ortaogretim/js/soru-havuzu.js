@@ -84,7 +84,7 @@
         <button type="button" class="btn btn-primary" id="poolGetirBtn">Soruları Getir</button>
       </div>
       <div class="card card-pad" id="poolSonuc">
-        <div class="empty-state">Sorular yükleniyor…</div>
+        <div class="empty-state">Henüz soru yüklenmedi.</div>
       </div>
     `;
 
@@ -102,9 +102,8 @@
   async function yukle() {
     const root = document.querySelector("#poolSonuc");
     if (!root) return;
-    const base = typeof apiBaseUrlAl === "function" ? apiBaseUrlAl() : "";
-    if (!base) {
-      root.innerHTML = `<div class="empty-state">Önce Ayarlar bölümünden backend adresini kaydet.</div>`;
+    if (typeof apiIstek !== "function") {
+      root.innerHTML = `<div class="empty-state">API istemcisi yüklenemedi. Sayfayı yenileyin.</div>`;
       return;
     }
 
@@ -116,12 +115,14 @@
         zorluk: filters.zorluk,
         sayi: String(filters.sayi)
       });
-      const response = await fetch(`${base}${POOL_PATH}?${params.toString()}`, { cache: "no-store" });
-      const data = await response.json();
-      if (!response.ok || !Array.isArray(data.sorular)) {
-        throw new Error(data.hata || "Soru havuzu yüklenemedi.");
+
+      // apiIstek X-User-Id header'ını otomatik ekler ve doğru backend adresini kullanır.
+      const sonuc = await apiIstek(`${POOL_PATH}?${params.toString()}`, { timeoutMs: 15000 });
+      if (!sonuc.ok) {
+        throw new Error(sonuc.mesaj || "Soru havuzu yüklenemedi.");
       }
-      currentPool = data.sorular;
+
+      currentPool = Array.isArray(sonuc.veri?.sorular) ? sonuc.veri.sorular : [];
       cizSonuc();
     } catch (error) {
       console.error("[soru-havuzu]", error);
