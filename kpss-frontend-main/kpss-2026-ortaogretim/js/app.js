@@ -113,29 +113,12 @@ function navBaglantilariniKur() {
 function renderSayfa(sayfaId) {
   if (sayfaId === "anasayfa") renderAnaSayfa();
   else if (sayfaId === "dersler") renderDersler();
-  else if (sayfaId === "calisma") renderCalisma();
   else if (sayfaId === "plan") renderPlan();
   else if (sayfaId === "denemeler") renderDenemeler();
   else if (sayfaId === "istatistik") renderIstatistik();
   else if (sayfaId === "guncel") renderGuncel();
-  else if (sayfaId === "soru-havuzu") renderSoruHavuzu();
+  else if (sayfaId === "aiogretmen") renderAiOgretmen();
   else if (sayfaId === "ayarlar") renderAyarlar();
-}
-
-/* ============================================================
-   ÇALIŞMA SAYFASI
-   ============================================================ */
-function calismaSayfasiniAc() {
-  $all(".page").forEach(p => p.classList.remove("active"));
-  const sayfa = $("#page-calisma");
-  if (!sayfa) return;
-  sayfa.classList.add("active");
-  $all(".nav-item, .bn-item").forEach(b => b.classList.toggle("active", b.dataset.page === "calisma"));
-  renderCalisma();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-  $("#studyDers")?.addEventListener("change", e => { calismaUI.ders = e.target.value; studyKartlariCiz(); });
 }
 
 /* ============================================================
@@ -233,37 +216,55 @@ function renderAnaSayfa() {
       </div>
     </div>
 
-    <button class="btn btn-accent btn-block" id="anaSoruCozBtn" style="margin-bottom:16px; padding:18px; font-size:17px; font-weight:700;">
-      🎯 Soru Çözmeye Başla
+    <div class="motiv-strip"><span class="ic">✎</span><span>${motivasyonSozu()}</span></div>
+
+    <button class="btn btn-accent btn-block" id="anaSoruCozBtn" style="margin-bottom:20px; padding:16px; font-size:16px; font-weight:700;">
+      🎯 Soru Çözmeye Başla (${hedefSoru} Soru · Tüm Derslerden Karma)
     </button>
 
-    <div class="grid grid-2">
+    <div class="grid grid-4" style="margin-bottom:20px;">
       <div class="card stat-card">
-        <span class="label">Bugün Çözülen</span>
-        <span class="value tabular">${kayit.soru}</span>
+        <span class="label">Bugünkü Çalışma</span>
+        <span class="value tabular">${dkFormat(kayit.calismaDk)}</span>
+        <span class="sub">Hedef: ${dkFormat(hedefDk)}</span>
+        <div class="progress-track"><div class="progress-fill" style="width:${dkYuzde}%"></div></div>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Bugün Çözülen Soru</span>
+        <span class="value tabular">${kayit.soru} / ${hedefSoru}</span>
         <span class="sub">${kayit.dogru} doğru · ${kayit.yanlis} yanlış</span>
         <div class="progress-track"><div class="progress-fill accent" style="width:${soruYuzde}%"></div></div>
       </div>
       <div class="card stat-card">
-        <span class="label">Toplam Soru</span>
+        <span class="label">Toplam Çözülen Soru</span>
         <span class="value tabular">${genelToplamSoru()}</span>
-        <span class="sub">%${genelBasari} başarı</span>
+        <span class="sub">Tüm dersler toplamı</span>
+      </div>
+      <div class="card stat-card">
+        <span class="label">Genel Başarı</span>
+        <span class="value tabular">%${genelBasari}</span>
+        <span class="sub">${genelToplamDogru()} doğru / ${genelToplamDogru() + genelToplamYanlis()} soru</span>
       </div>
     </div>
 
     <div class="grid grid-2" style="align-items:start;">
       <div class="card card-pad pomo-card" id="anaPomoCard"></div>
-      <div class="card card-pad" id="anaTekrarCard">
-        <div class="section-title">Tekrar Gerekenler</div>
-        <div id="anaTekrarListe">
-          ${tekrarListe.length === 0
-            ? `<div class="empty-state">Tüm konular hazır 👍</div>`
-            : tekrarListe.slice(0, 5).map(t => `
-              <div class="tekrar-item">
-                <span>${t.dersAdi} → ${t.konu.ad}</span>
-                <button class="btn btn-outline btn-sm" data-konu-git="${t.dersId}">Çöz</button>
-              </div>`).join("")}
-        </div>
+      <div class="card card-pad">
+        <div class="section-title">Bugünün Planı <button class="btn btn-outline btn-sm" data-git="plan">Plana git</button></div>
+        <div id="anaPlanListe"></div>
+      </div>
+    </div>
+
+    <div class="card card-pad" style="margin-top:16px;">
+      <div class="section-title">Tekrar Etmen Gerekenler <span class="badge badge-tekrar">${tekrarListe.length}</span></div>
+      <div id="anaTekrarListe">
+        ${tekrarListe.length === 0
+          ? `<div class="empty-state">Şu anda "Tekrar gerekli" olarak işaretlenmiş konu yok. Böyle devam! 👍</div>`
+          : tekrarListe.map(t => `
+            <div class="tekrar-item">
+              <span>${t.dersAdi} <span class="yol">→</span> ${t.konu.ad}</span>
+              <button class="btn btn-outline btn-sm" data-konu-git="${t.dersId}">Konuya git</button>
+            </div>`).join("")}
       </div>
     </div>
   `;
@@ -1155,6 +1156,54 @@ function gbListeCiz() {
    ============================================================ */
 let aiSohbetGecmisi = [];
 
+function renderAiOgretmen() {
+  $("#page-aiogretmen").innerHTML = `
+    <div class="page-head">
+      <h1>AI Öğretmen</h1>
+      <div class="alt">KPSS ile ilgili soru sor, yapay zekâ sınav odaklı cevap versin. Güncel bir konu sorarsan internetten güvenilir kaynaklarla destekler.</div>
+    </div>
+    <div class="card" style="margin-bottom:14px;">
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <input type="file" id="aiFotoInput" accept="image/*" capture="environment" style="display:none;">
+        <button class="btn btn-sm" id="aiFotoBtn">📸 Fotoğraftan Soru Çöz</button>
+      </div>
+    </div>
+    <div id="aiSohbetKutu" class="ai-sohbet-kutu"></div>
+    <div class="ai-giris-satiri" style="display:flex; gap:8px; margin-top:10px;">
+      <input type="text" id="aiSoruInput" placeholder="Örn: Saltanat hangi tarihte kaldırıldı?" style="flex:1;">
+      <button class="btn btn-accent" id="aiGonderBtn">Gönder</button>
+    </div>
+  `;
+
+  aiSohbetGecmisiCiz();
+
+  $("#aiGonderBtn").addEventListener("click", aiSoruGonder);
+  $("#aiSoruInput").addEventListener("keydown", (e) => { if (e.key === "Enter") aiSoruGonder(); });
+  $("#aiFotoBtn").addEventListener("click", () => $("#aiFotoInput").click());
+  $("#aiFotoInput").addEventListener("change", aiFotoYuklendi);
+}
+
+function aiSohbetGecmisiCiz() {
+  const kutu = $("#aiSohbetKutu");
+  if (!kutu) return;
+  if (aiSohbetGecmisi.length === 0) {
+    kutu.innerHTML = `<div class="alt" style="padding:20px 0;">Henüz bir soru sormadın. Yukarıdan yazabilir veya fotoğraf yükleyebilirsin.</div>`;
+    return;
+  }
+  kutu.innerHTML = aiSohbetGecmisi.map(msj => {
+    if (msj.rol === "kullanici") {
+      return `<div class="ai-msj ai-msj-kullanici">${msj.metin}</div>`;
+    }
+    const kaynakHtml = (msj.kaynaklar && msj.kaynaklar.length)
+      ? `<div class="ai-kaynaklar">${msj.kaynaklar.map(k => `<a href="${k.url}" target="_blank" rel="noopener">${k.kaynak}</a>`).join(" · ")}</div>`
+      : "";
+    const belirsizHtml = msj.belirsiz ? `<div class="alt">Bu bilgi güncel kaynaklardan kesin olarak doğrulanamadı.</div>` : "";
+    return `<div class="ai-msj ai-msj-bot">${msj.metin}${belirsizHtml}${kaynakHtml}</div>`;
+  }).join("");
+  kutu.scrollTop = kutu.scrollHeight;
+}
+
+async function aiSoruGonder() {
   const input = $("#aiSoruInput");
   const soru = input.value.trim();
   if (!soru) return;
@@ -1303,6 +1352,7 @@ function renderAyarlar() {
   });
   $("#ayApiKaydetBtn").addEventListener("click", () => {
     apiBaseUrlAyarla($("#ayApiBaseUrl").value);
+    toast("Sunucu adresi kaydedildi.");
   });
   $("#ayApiTestBtn").addEventListener("click", async () => {
     apiBaseUrlAyarla($("#ayApiBaseUrl").value);
