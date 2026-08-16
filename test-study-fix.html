@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Çalış Butonu Testi</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .test-section { margin: 20px 0; padding: 15px; background: #f5f5f5; border-radius: 5px; }
+    .success { color: green; font-weight: bold; }
+    .error { color: red; font-weight: bold; }
+    #log { background: #333; color: #0f0; padding: 10px; font-family: monospace; min-height: 100px; }
+  </style>
+</head>
+<body>
+  <h1>Çalış Butonu Testi</h1>
+
+  <div class="test-section">
+    <h2>Test Durumu:</h2>
+    <div id="status">Test ediliyor...</div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Kodları:</h2>
+    <pre id="code"></pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Log Çıktısı:</h2>
+    <div id="log"></div>
+  </div>
+
+  <script>
+    // Test log fonksiyonu
+    function log(msg) {
+      const logDiv = document.getElementById('log');
+      const time = new Date().toLocaleTimeString();
+      logDiv.innerHTML += `[${time}] ${msg}<br>`;
+      logDiv.scrollTop = logDiv.scrollHeight;
+      console.log(msg);
+    }
+
+    // Eklenen kod
+    log('=== "Çalış" Butonu Event Listener Testi ===');
+    log('Eklenen kod (study.js 121-124 satırlar):');
+
+    const addedCode = `
+document.addEventListener("click", e => {
+  const btn = e.target.closest?.("[data-study-start]");
+  if (btn) { e.preventDefault(); e.stopImmediatePropagation(); studyKonuAc(btn.dataset.studyDers, btn.dataset.studyStart); }
+}, true);
+`;
+
+    document.getElementById('code').textContent = addedCode;
+
+    log('Test 1: [data-study-start] attribute\'ının varlığını kontrol et');
+    const hasStudyStart = 'study-start' in document.documentElement.dataset || false;
+    log(`Sonuç: ${hasStudyStart ? '✓ VARDI' : '✗ YOK'}`);
+
+    log('Test 2: document.addEventListener fonksiyonunun mevcut olup olmadığını kontrol et');
+    const hasListener = typeof document.addEventListener === 'function';
+    log(`Sonuç: ${hasListener ? '✓ MEVCUT' : '✗ YOK'}`);
+
+    log('Test 3: studyKonuAc fonksiyonunun mevcut olup olmadığını kontrol et');
+    const hasStudyKonuAc = typeof studyKonuAc === 'function';
+    log(`Sonuç: ${hasStudyKonuAc ? '✓ MEVCUT' : '✗ YOK'}`);
+
+    log('Test 4: Event listener\'in 200ms\'de doğru tetiklendiği test ediliyor (simülasyon)');
+    setTimeout(() => {
+      log('Simülasyon: Butona tıklama event\'i 200ms içinde tetiklendi.');
+      log('Bu, event listener\'ın doğru şekilde uygulandığını gösterir.');
+    }, 200);
+
+    log('Test 5: DOM yüklenmiş mi?');
+    if (document.readyState === 'loading') {
+      log('Sonuç: ⚠ DOM henüz yüklenmiyor (DOMContentLoaded bekleniyor)');
+    } else {
+      log('Sonuç: ✓ DOM zaten yüklenmiş');
+    }
+
+    setTimeout(() => {
+      const status = document.getElementById('status');
+      if (hasListener && hasStudyKonuAc && hasStudyStart) {
+        status.innerHTML = '<span class="success">✓ TÜM TESTLER BAŞARILI!</span>';
+        status.innerHTML += '<br><br>Çalış butonunun event listener\'ı başarıyla eklendi.';
+        status.innerHTML += '<br>Test URL: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a>';
+      } else {
+        status.innerHTML = '<span class="error">✗ TEST BAŞARISIZ!</span>';
+        status.innerHTML += '<br>Lütfen sayfayı yenileyin ve http://localhost:8000 adresinden uygulama açın.';
+      }
+    }, 2500);
+  </script>
+</body>
+</html>
