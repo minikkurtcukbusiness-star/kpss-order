@@ -1,10 +1,11 @@
 /* ==========================================================================
    routes/questions.js
-   - POST /api/questions            → kullanıcı kendi sorusunu ekler (özellik 12)
+   - GET  /api/questions             → soru havuzundan rastgele/filtreli sorular
+   - POST /api/questions            → kullanıcı kendi sorusunu ekler
    - GET  /api/questions/mine       → kullanıcının kendi eklediği sorular
-   - POST /api/questions/wrong      → yanlış yapılan soruyu kaydet (özellik 14)
+   - POST /api/questions/wrong      → yanlış yapılan soruyu kaydet
    - GET  /api/questions/wrong      → kullanıcının yanlış listesini getir
-   - POST /api/questions/report     → hatalı soru bildir (admin panelinde görünür)
+   - POST /api/questions/report     → hatalı soru bildir
    ========================================================================== */
 
 const express = require("express");
@@ -22,12 +23,48 @@ function userIdAl(req, res) {
   return userId;
 }
 
+// Mevcut soruların basit listesi.
 router.get("/", (req, res) => {
   const userId = userIdAl(req, res);
   if (!userId) return;
   const limit = Math.min(50, Math.max(1, Number(req.query.sayi) || 20));
   const sorular = db.prepare("SELECT * FROM questions ORDER BY created_at DESC LIMIT ?").all(limit);
+  res.set("Cache-Control", "no-store");
   res.json({ sorular: sorular.map(satirCevir) });
+});
+
+// Kalıcı soru havuzu: filtreli ve rastgele seçim.
+router.get("/pool", (req, res) => {
+  const ders = String(req.query.ders || "tumu");
+  const konu = String(req.query.konu || "tumu");
+  const zorluk = String(req.query.zorluk || "tumu");
+  const sayi = Math.min(40, Math.max(1, Number(req.query.sayi) || 10));
+
+  let sql = "SELECT * FROM questions WHERE 1=1";
+  const params = [];
+
+  if (ders !== "tumu") {
+    sql += " AND subject = ?";
+    params.push(ders);
+  }
+  if (konu !== "tumu") {
+    sql += " AND topic = ?";
+    params.push(konu);
+  }
+  if (zorluk !== "tumu") {
+    sql += " AND difficulty = ?";
+    params.push(zorluk);
+  }
+
+  sql += " ORDER BY RANDOM() LIMIT ?";
+  params.push(sayi);
+
+  const sorular = db.prepare(sql).all(...params);
+  res.set("Cache-Control", "no-store");
+  res.json({
+    sorular: sorular.map(satirCevir),
+    filtreler: { ders, konu, zorluk, sayi }
+  });
 });
 
 router.post("/", (req, res) => {
@@ -93,7 +130,7 @@ router.post("/report", (req, res) => {
   const userId = userIdAl(req, res);
   if (!userId) return;
   const { questionId, sebep } = req.body;
-  if (!questionId) return res.status(400).json({ hata: "questionId zorunlu." });
+  if (!questionId) return res.status(400).json({ hata: "questionId zorunludur." });
 
   db.prepare("INSERT INTO reported_questions (id, question_id, user_id, sebep) VALUES (?, ?, ?, ?)").run(
     nanoid(), questionId, userId, sebep || ""
