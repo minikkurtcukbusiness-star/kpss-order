@@ -27,14 +27,13 @@
     const rec=todayRecord(), hedef=STATE.ayarlar.gunlukSoruHedefi||20, pct=Math.min(100,Math.round((rec.soru/Math.max(1,hedef))*100));
     const nxt=nextTopic(); const completed=doneKonu(), total=totalKonu();
     const hero=document.createElement('div'); hero.className='premium-hero';
-    hero.innerHTML=`<div class="premium-kicker">Kişisel çalışma merkezi</div><h2>Bugün küçük bir adım, sınavda büyük fark. 🚀</h2><p>${rec.soru>=hedef?'Bugünkü soru hedefini tamamladın. İstersen yanlışlarını tekrar et veya bir konu ilerlet.':'Hedefine ulaşmak için bugün sadece bir sonraki adımı seç. Sistem ilerlemeni otomatik takip eder.'}</p><div class="premium-actions"><button class="btn" id="premiumStartTest">🎯 ${testCount} Soruluk Akıllı Test</button><button class="btn" id="premiumStartStudy">📖 Konuya Devam Et</button><button class="btn" id="premiumCerosBtn">💌 Özel Sürpriz</button></div>`;
+    hero.innerHTML=`<div class="premium-kicker">Kişisel çalışma merkezi</div><h2>Bugün küçük bir adım, sınavda büyük fark. 🚀</h2><p>${rec.soru>=hedef?'Bugünkü soru hedefini tamamladın. İstersen yanlışlarını tekrar et veya bir konu ilerlet.':'Hedefine ulaşmak için bugün sadece bir sonraki adımı seç. Sistem ilerlemeni otomatik takip eder.'}</p><div class="premium-actions"><button class="btn" id="premiumStartTest">🎯 ${testCount} Soruluk Akıllı Test</button><button class="btn" id="premiumStartStudy">📖 Konuya Devam Et</button></div>`;
     const first=root.firstElementChild; root.insertBefore(hero,first?.nextSibling||root.firstChild);
     const grid=document.createElement('div'); grid.className='premium-grid';
     grid.innerHTML=`<div class="premium-stat"><span class="ps-icon">🎯</span><span class="ps-value">${rec.soru}/${hedef}</span><span class="ps-label">Bugünkü soru hedefi</span><div class="ps-bar"><span style="width:${pct}%"></span></div></div><div class="premium-stat"><span class="ps-icon">⏱️</span><span class="ps-value">${rec.calismaDk||0} dk</span><span class="ps-label">Bugünkü çalışma</span></div><div class="premium-stat"><span class="ps-icon">📚</span><span class="ps-value">${completed}/${total}</span><span class="ps-label">Tamamlanan konu</span></div><div class="premium-stat"><span class="ps-icon">🔥</span><span class="ps-value">${STATE.seri.guncel||0}</span><span class="ps-label">Günlük seri</span></div>`;
     hero.after(grid);
     $("#premiumStartTest")?.addEventListener('click',()=>smartTestModal());
     $("#premiumStartStudy")?.addEventListener('click',()=>{ if(nxt){ dersOgrenmeBaslat(nxt.d.id,nxt.k.id); } else toast('🎉 Tüm konuları tamamladın!'); });
-    $("#premiumCerosBtn")?.addEventListener('click',cerosModal);
   }
 
   function enhanceStudy(){

@@ -10,10 +10,37 @@ async function paketUret(istekler,toplam,oncekiler=[]){let last=null;for(let den
 function normalizeIstekler(istekler,toplam){const src=Array.isArray(istekler)?istekler:[];const out=[];let kalan=toplam;for(const x of src){if(kalan<=0||!x?.subject)continue;const n=Math.min(kalan,Math.max(1,Math.floor(Number(x.count)||1)));out.push({subject:String(x.subject),topic:String(x.topic||"Karışık"),difficulty:String(x.difficulty||"orta"),count:n});kalan-=n;}if(!out.length)out.push({subject:"Türkçe",topic:"Karışık",difficulty:"orta",count:toplam});if(kalan>0)out[out.length-1].count+=kalan;return out;}
 function makeBatch(remaining,adet){const batch=[];let cap=adet;for(const x of remaining){if(cap<=0)break;if(x.count<=0)continue;const take=Math.min(x.count,cap);batch.push({...x,count:take});x.count-=take;cap-=take;}return batch;}
 async function testUret(istekler,toplam){toplam=Math.min(MAX_TEST,Math.max(1,Math.floor(Number(toplam)||10)));const remaining=normalizeIstekler(istekler,toplam);const all=[],seen=new Set(),oncekiler=[];let packageNo=0;while(all.length<toplam){const adet=Math.min(MAX_SORU_PAKET,toplam-all.length);const batch=makeBatch(remaining,adet);if(!batch.length)break;packageNo++;console.log(`[ai/test] Paket ${packageNo}/${Math.ceil(toplam/MAX_SORU_PAKET)}: ${adet} soru.`);const qs=await paketUret(batch,adet,oncekiler);for(const q of qs){const key=q.soru.trim().toLocaleLowerCase("tr-TR");if(seen.has(key))continue;seen.add(key);all.push(q);oncekiler.push(q.soru.slice(0,160));if(all.length>=toplam)break;}}return all.slice(0,toplam);}
-router.post("/teacher",async(req,res)=>{const soru=String(req.body?.soru||"").trim();if(!soru)return res.status(400).json({hata:"Lütfen bir soru yaz."});try{const cevap=await aiProvider.generate({system:"Sen KPSS Ortaöğretim öğrencisinin kişisel AI öğretmenisin. Türkçe, anlaşılır ve öğretici cevap ver. Gerektiğinde adım adım anlat ve örnek ver.",prompt:`Öğrencinin sorusu:\n${soru}`,jsonMode:false,maxTokens:1800});res.json({ok:true,cevap:String(cevap),kaynaklar:[],belirsiz:false});}catch(e){console.error("[ai/teacher]",e.message);res.status(503).json({hata:"AI Öğretmen şu anda cevap veremedi. Lütfen tekrar dene."});}});
 router.post("/generate-questions",async(req,res)=>{try{const {subject,topic,difficulty,count}=req.body||{};const toplam=Math.min(MAX_TEST,Math.max(1,Math.floor(Number(count)||10)));const sorular=await testUret([{subject:subject||"Türkçe",topic:topic||"Karışık",difficulty:difficulty||"orta",count:toplam}],toplam);if(sorular.length!==toplam)throw new Error(`Beklenen ${toplam}, üretilen ${sorular.length}.`);res.json({ok:true,sorular,soruSayisi:sorular.length});}catch(e){console.error("[ai/generate-questions]",e.message);res.status(e.code==="AI_TIMEOUT"?504:503).json({hata:`${Number(req.body?.count)||10} soruluk test hazırlanamadı: ${e.message}`});}});
 router.post("/generate-mixed-test",async(req,res)=>{try{const istekler=req.body?.istekler;if(!Array.isArray(istekler)||!istekler.length)return res.status(400).json({hata:"Ders ve konu bilgisi gönderilmedi."});const toplam=Math.min(MAX_SORU_PAKET,Math.max(1,istekler.reduce((t,x)=>t+Math.max(0,Number(x.count)||0),0)||5));const sorular=await testUret(istekler,toplam);res.json({ok:true,sorular,soruSayisi:sorular.length});}catch(e){console.error("[ai/generate-mixed-test]",e.message);res.status(e.code==="AI_TIMEOUT"?504:503).json({hata:"Karma soru servisi şu anda kullanılamıyor. Lütfen tekrar deneyin."});}});
-router.post("/generate-mock-exam",async(req,res)=>{try{const istekler=req.body?.istekler;if(!Array.isArray(istekler)||!istekler.length)return res.status(400).json({hata:"Deneme için ders ve konu bilgisi gönderilmedi."});console.log("[ai/generate-mock-exam] 20 soruluk deneme hazırlanıyor; 4 x 5 soru.");const sorular=await testUret(istekler,MOCK_EXAM_SORU);if(sorular.length!==MOCK_EXAM_SORU)throw new Error(`Deneme ${MOCK_EXAM_SORU} yerine ${sorular.length} soru üretti.`);console.log("[ai/generate-mock-exam] Deneme hazır: 20/20 soru.");res.json({ok:true,sorular,soruSayisi:sorular.length});}catch(e){console.error("[ai/generate-mock-exam]",e.message);res.status(e.code==="AI_TIMEOUT"?504:503).json({hata:"20 soruluk deneme şu anda hazırlanamadı: "+e.message});}});
+router.post("/generate-mock-exam",async(req,res)=>{
+  try{
+    const istekler=req.body?.istekler;
+    if(!Array.isArray(istekler)||!istekler.length)return res.status(400).json({hata:"Deneme için ders ve konu bilgisi gönderilmedi."});
+    console.log("[ai/generate-mock-exam] 20 soruluk deneme hazırlanıyor; 4 x 5 soru.");
+    let sorular=[];
+    let attempts=0;
+    const maxAttempts=3;
+
+    while(sorular.length<MOCK_EXAM_SORU && attempts<maxAttempts){
+      attempts++;
+      sorular=await testUret(istekler,MOCK_EXAM_SORU);
+      if(sorular.length<MOCK_EXAM_SORU){
+        console.log(`[ai/generate-mock-exam] Deneme başarısız (${attempts}/${maxAttempts}): ${sorular.length}/${MOCK_EXAM_SORU} soru üretildi.`);
+      }
+    }
+
+    if(sorular.length<MOCK_EXAM_SORU){
+      console.log(`[ai/generate-mock-exam] Deneme tamamlandı (${sorular.length}/${MOCK_EXAM_SORU}): Son deneme sonucu. Soru eksikliği kabul ediliyor.`);
+    }else{
+      console.log("[ai/generate-mock-exam] Deneme hazır: 20/20 soru.");
+    }
+
+    res.json({ok:true,sorular,soruSayisi:sorular.length});
+  }catch(e){
+    console.error("[ai/generate-mock-exam]",e.message);
+    res.status(e.code==="AI_TIMEOUT"?504:503).json({hata:"20 soruluk deneme şu anda hazırlanamadı: "+e.message});
+  }
+});
 router.post("/solve-image",async(req,res)=>{try{const imageBase64=String(req.body?.imageBase64||""),mimeType=String(req.body?.mimeType||"image/jpeg");if(!imageBase64)return res.status(400).json({hata:"Görsel gönderilmedi."});const content=await aiProvider.generateWithImage({system:"KPSS sorusunun görselini dikkatle oku. Yalnızca geçerli JSON döndür.",prompt:"Soruyu çöz ve şu JSON formatında cevap ver: {\"soru\":\"...\",\"secenekler\":{\"A\":\"...\",\"B\":\"...\",\"C\":\"...\",\"D\":\"...\",\"E\":\"...\"},\"dogruCevap\":\"A\",\"aciklama\":\"...\"}",imageBase64,mimeType});const parsed=temizJson(content);if(!parsed?.soru||!parsed?.dogruCevap)throw new Error("Görselden geçerli soru cevabı alınamadı.");res.json(parsed);}catch(e){console.error("[ai/solve-image]",e.message);res.status(503).json({hata:"Fotoğraftaki soru şu anda çözülemedi. Daha net bir görsel deneyin."});}});
 router.get("/health",(req,res)=>res.json({ok:true,servis:"KPSS AI",sistem:"OpenRouter",modeller:modelListesi(),maksimumSoru:MAX_TEST,denemeSoru:MOCK_EXAM_SORU}));
 module.exports=router;

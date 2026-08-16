@@ -22,6 +22,14 @@ function userIdAl(req, res) {
   return userId;
 }
 
+router.get("/", (req, res) => {
+  const userId = userIdAl(req, res);
+  if (!userId) return;
+  const limit = Math.min(50, Math.max(1, Number(req.query.sayi) || 20));
+  const sorular = db.prepare("SELECT * FROM questions ORDER BY created_at DESC LIMIT ?").all(limit);
+  res.json({ sorular: sorular.map(satirCevir) });
+});
+
 router.post("/", (req, res) => {
   const userId = userIdAl(req, res);
   if (!userId) return;
