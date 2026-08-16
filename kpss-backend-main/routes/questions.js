@@ -30,6 +30,37 @@ router.get("/", (req, res) => {
   res.json({ sorular: sorular.map(satirCevir) });
 });
 
+router.get("/pool", (req, res) => {
+  const ders = req.query.ders || "tumu";
+  const konu = req.query.konu || "tumu";
+  const zorluk = req.query.zorluk || "tumu";
+  const sayi = Math.min(100, Math.max(1, Number(req.query.sayi) || 20));
+
+  let sql = "SELECT * FROM questions WHERE 1=1";
+  let params = [];
+
+  if (ders !== "tumu") {
+    sql += " AND subject = ?";
+    params.push(ders);
+  }
+  if (konu !== "tumu") {
+    sql += " AND topic = ?";
+    params.push(konu);
+  }
+  if (zorluk !== "tumu") {
+    sql += " AND difficulty = ?";
+    params.push(zorluk);
+  }
+
+  sql += " ORDER BY RANDOM() LIMIT ?";
+
+  const sorular = db.prepare(sql).all(...params, sayi);
+  res.json({
+    sorular: sorular.map(satirCevir),
+    filtreler: { ders, konu, zorluk, sayi }
+  });
+});
+
 router.post("/", (req, res) => {
   const userId = userIdAl(req, res);
   if (!userId) return;
