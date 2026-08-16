@@ -1304,7 +1304,7 @@ function renderAyarlar() {
     <div class="card card-pad settings-block">
       <h3>Yapay Zekâ Sunucusu</h3>
       <div class="alt" style="margin-bottom:8px;">AI Öğretmen, güncel bilgiler ve fotoğraftan soru çözme özellikleri kendi kurduğun backend sunucusuna bağlanır. API anahtarların hiçbir zaman bu uygulamanın içinde saklanmaz.</div>
-      <div class="field"><label>Sunucu Adresi (API_BASE_URL)</label><input type="text" id="ayApiBaseUrl" placeholder="https://kpss-backend-production.up.railway.app" value="${apiBaseUrlAl()}"></div>
+      <div class="field"><label>Sunucu Adresi (API_BASE_URL)</label><input type="text" id="ayApiBaseUrl" placeholder="https://kpss-order-production.up.railway.app" value="${apiBaseUrlAl()}"></div>
       <div style="display:flex; gap:8px; align-items:center; margin-top:8px;">
         <button class="btn btn-sm" id="ayApiKaydetBtn">Kaydet</button>
         <button class="btn btn-sm btn-outline" id="ayApiTestBtn">Bağlantıyı Test Et</button>
@@ -1422,3 +1422,4 @@ function init() {
   sayfaGec("anasayfa");
 }
 document.addEventListener("DOMContentLoaded", init);
+

@@ -1,6 +1,6 @@
 /* Central browser API client. */
 const API_STORAGE_KEY="kpss2026_api_ayarlari_v1";
-const DEFAULT_API_BASE="https://kpss-backend-production.up.railway.app";
+const DEFAULT_API_BASE="https://kpss-order-production.up.railway.app";
 function apiAyarlariOku(){try{const ham=localStorage.getItem(API_STORAGE_KEY);return ham?JSON.parse(ham):{baseUrl:DEFAULT_API_BASE}}catch{return{baseUrl:DEFAULT_API_BASE}}}
 function apiAyarlariKaydet(a){localStorage.setItem(API_STORAGE_KEY,JSON.stringify(a))}
 function apiBaseUrlAl(){const raw=(apiAyarlariOku().baseUrl||DEFAULT_API_BASE).trim();return raw.replace(/\/+$/,'').replace(/\/api$/i,'')}
