@@ -113,11 +113,51 @@ function navBaglantilariniKur() {
 function renderSayfa(sayfaId) {
   if (sayfaId === "anasayfa") renderAnaSayfa();
   else if (sayfaId === "dersler") renderDersler();
+  else if (sayfaId === "calisma") renderCalisma();
   else if (sayfaId === "plan") renderPlan();
   else if (sayfaId === "denemeler") renderDenemeler();
   else if (sayfaId === "istatistik") renderIstatistik();
   else if (sayfaId === "guncel") renderGuncel();
+  else if (sayfaId === "soru-havuzu") renderSoruHavuzu();
   else if (sayfaId === "ayarlar") renderAyarlar();
+}
+
+/* ============================================================
+   ÇALIŞMA SAYFASI
+   ============================================================ */
+function calismaSayfasiniAc() {
+  $all(".page").forEach(p => p.classList.remove("active"));
+  const sayfa = $("#page-calisma");
+  if (!sayfa) return;
+  sayfa.classList.add("active");
+  $all(".nav-item, .bn-item").forEach(b => b.classList.toggle("active", b.dataset.page === "calisma"));
+  renderCalisma();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function renderCalisma() {
+  const ozet = calismaOzet();
+  $("#page-calisma").innerHTML = `
+    <div class="study-hero"><div><div class="study-eyebrow">🎯 ÇALIŞMA MERKEZİ</div><h1>Bugün ne çalışıyoruz?</h1><p>Konunu seç, kısa bir hedef koy ve ilerlemeni işaretle.</p></div><div class="study-hero-score"><strong>%${ozet.yuzde}</strong><span>Konu tamamlandı</span></div></div>
+    <div class="study-quick-grid"><div class="study-stat"><span>📚</span><strong>${ozet.toplam}</strong><small>Toplam konu</small></div><div class="study-stat"><span>🔥</span><strong>${ozet.aktif}</strong><small>Şu an çalışılan</small></div><div class="study-stat"><span>✅</span><strong>${ozet.tamam}</strong><small>Tamamlanan</small></div><div class="study-stat"><span>🔁</span><strong>${ozet.tekrar}</strong><small>Tekrar bekleyen</small></div></div>
+    <div class="card study-today-card"><div><span class="study-mini-label">⚡ HIZLI BAŞLANGIÇ</span><h3>15 dakikalık mini tur</h3><p>Bir konu seç, 15 dakika odaklan ve ardından birkaç soru çöz.</p></div><button type="button" class="btn btn-accent" id="studyRastgeleBtn">🎲 Bana konu seç</button></div>
+    <div class="study-toolbar">
+      <input type="text" id="studyArama" class="study-search" placeholder="🔍 Konu ara...">
+      <select id="studyDers" class="study-toolbar select"><option value="tumu">Tüm Dersler</option>${SUBJECTS_META.map(d=>`<option value="${d.id}">${d.name}</option>`).join('')}</select>
+    </div>
+    <div class="card card-pad">
+      <div class="section-title">Bugünün Planı <button class="btn btn-outline btn-sm" id="planGitBtn">Plana git</button></div>
+      <div id="studyPlanListe"></div>
+    </div>
+    <div class="section-title">Konu haritası <span class="badge" id="studyCount">0</span></div>
+    <div id="studyTopicGrid" class="study-topic-grid"></div>
+  `;
+  calismaUI = { arama: "", ders: "tumu" };
+  studyKartlariCiz();
+  renderStudyPlanListe();
+  $("#studyRastgeleBtn")?.addEventListener("click", calismaRastgeleKonuSec);
+  $("#studyArama")?.addEventListener("input", e => { calismaUI.arama = e.target.value; studyKartlariCiz(); });
+  $("#studyDers")?.addEventListener("change", e => { calismaUI.ders = e.target.value; studyKartlariCiz(); });
 }
 
 /* ============================================================
