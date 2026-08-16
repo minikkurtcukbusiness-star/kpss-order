@@ -1,0 +1,18 @@
+/* Soru Havuzu: native controls remain fully interactive and stay above page layers. */
+.soru-havuzu-panel,
+#page-soru-havuzu,
+#page-soru-havuzu .field,
+#page-soru-havuzu .pool-select,
+#page-soru-havuzu button {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
+#page-soru-havuzu .pool-select {
+  appearance: auto;
+  -webkit-appearance: auto;
+  min-height: 42px;
+  cursor: pointer;
+}
+#page-soru-havuzu .pool-select:disabled { opacity: .6; cursor: not-allowed; }
+#page-soru-havuzu .btn { cursor: pointer; pointer-events: auto; }
