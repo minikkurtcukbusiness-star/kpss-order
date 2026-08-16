@@ -22,14 +22,21 @@
     return [];
   }
 
+  function getKonular(dersId) {
+    if (dersId === "tumu") return [];
+    try {
+      if (typeof STATE !== "undefined" && Array.isArray(STATE.dersler?.[dersId]?.konular)) {
+        return STATE.dersler[dersId].konular;
+      }
+    } catch (_) {}
+    return [];
+  }
+
   function poolPageAc() {
-    document.querySelectorAll(".page").forEach((p) => p.classList.remove("active"));
     const root = document.querySelector("#page-soru-havuzu");
     if (!root) return;
     root.classList.add("active");
-    root.style.pointerEvents = "auto";
-    root.style.position = "relative";
-    root.style.zIndex = "2";
+    document.querySelectorAll(".page").forEach((p) => { if (p !== root) p.classList.remove("active"); });
     document.querySelectorAll(".nav-item, .bn-item").forEach((b) => {
       b.classList.toggle("active", b.dataset.page === "soru-havuzu");
     });
@@ -42,17 +49,15 @@
     if (!root) return;
 
     const dersler = getSubjects();
-    const konular = filters.ders === "tumu"
-      ? []
-      : (dersler.find((d) => String(d.id) === String(filters.ders))?.konular || []);
+    const konular = getKonular(filters.ders);
 
     root.innerHTML = `
       <div class="page-head">
         <h1>📚 Soru Havuzu</h1>
-        <div class="alt">Daha önce kaydedilmiş sorulardan rastgele test oluştur.</div>
+        <div class="alt">Kaydedilmiş sorulardan rastgele test oluştur.</div>
       </div>
       <div class="card card-pad soru-havuzu-panel">
-        <div class="section-title">Filtreler</div>
+        <div class="section-title">Test seçenekleri</div>
         <div class="grid grid-2">
           <div class="field"><label for="poolDers">Ders</label>
             <select id="poolDers" class="pool-select">
@@ -84,24 +89,18 @@
         </div>
         <button type="button" class="btn btn-primary" id="poolGetirBtn">Soruları Getir</button>
       </div>
-      <div class="card card-pad" id="poolSonuc"><div class="empty-state">Henüz soru yüklenmedi.</div></div>
+      <div class="card card-pad" id="poolSonuc"><div class="empty-state">Bir test boyutu seçip <strong>Soruları Getir</strong>'e bas.</div></div>
     `;
 
-    const dersEl = document.querySelector("#poolDers");
-    const konuEl = document.querySelector("#poolKonu");
-    const zorlukEl = document.querySelector("#poolZorluk");
-    const sayiEl = document.querySelector("#poolSayi");
-    const getirEl = document.querySelector("#poolGetirBtn");
-
-    dersEl?.addEventListener("change", (e) => {
+    document.querySelector("#poolDers")?.addEventListener("change", (e) => {
       filters.ders = e.target.value;
       filters.konu = "tumu";
       render();
     });
-    konuEl?.addEventListener("change", (e) => { filters.konu = e.target.value; });
-    zorlukEl?.addEventListener("change", (e) => { filters.zorluk = e.target.value; });
-    sayiEl?.addEventListener("change", (e) => { filters.sayi = Number(e.target.value) || 10; });
-    getirEl?.addEventListener("click", (e) => { e.preventDefault(); yukle(); });
+    document.querySelector("#poolKonu")?.addEventListener("change", (e) => { filters.konu = e.target.value; });
+    document.querySelector("#poolZorluk")?.addEventListener("change", (e) => { filters.zorluk = e.target.value; });
+    document.querySelector("#poolSayi")?.addEventListener("change", (e) => { filters.sayi = Number(e.target.value) || 10; });
+    document.querySelector("#poolGetirBtn")?.addEventListener("click", (e) => { e.preventDefault(); yukle(); });
   }
 
   async function yukle() {
@@ -109,25 +108,16 @@
     if (!root) return;
     root.innerHTML = `<div class="empty-state">Sorular getiriliyor…</div>`;
 
-    if (typeof apiIstek !== "function") {
-      root.innerHTML = `<div class="empty-state">API istemcisi yüklenemedi. Sayfayı yenileyin.</div>`;
-      return;
-    }
-
     try {
-      const params = new URLSearchParams({
-        ders: filters.ders,
-        konu: filters.konu,
-        zorluk: filters.zorluk,
-        sayi: String(filters.sayi)
-      });
-      const sonuc = await apiIstek(`${POOL_PATH}?${params.toString()}`, { timeoutMs: 15000 });
+      if (typeof apiIstek !== "function") throw new Error("API istemcisi yüklenemedi.");
+      const params = new URLSearchParams({ ders: filters.ders, konu: filters.konu, zorluk: filters.zorluk, sayi: String(filters.sayi) });
+      const sonuc = await apiIstek(`${POOL_PATH}?${params.toString()}`, { timeoutMs: 20000 });
       if (!sonuc.ok) throw new Error(sonuc.mesaj || "Soru havuzu yüklenemedi.");
       currentPool = Array.isArray(sonuc.veri?.sorular) ? sonuc.veri.sorular : [];
       cizSonuc();
     } catch (error) {
       console.error("[soru-havuzu]", error);
-      root.innerHTML = `<div class="empty-state">${esc(error.message || "Sunucu bağlantısı başarısız.")}</div>`;
+      root.innerHTML = `<div class="empty-state">${esc(error.message || "Sorular getirilemedi.")}</div>`;
     }
   }
 
@@ -138,21 +128,12 @@
       root.innerHTML = `<div class="empty-state">Bu filtrelerle eşleşen soru bulunamadı.</div>`;
       return;
     }
-    root.innerHTML = `
-      <div class="section-title"><span>${currentPool.length} soru bulundu</span><button type="button" class="btn btn-accent btn-sm" id="poolTestBtn">Testi Başlat</button></div>
-      <div class="pool-soru-list">${currentPool.map((q, i) => `<div class="card card-pad" style="margin-bottom:10px;"><strong>${i + 1}. ${esc(q.question)}</strong><div class="alt" style="margin-top:6px;">${esc(q.subject || "")} · ${esc(q.topic || "")}</div></div>`).join("")}</div>`;
+    root.innerHTML = `<div class="section-title"><span>${currentPool.length} soru bulundu</span><button type="button" class="btn btn-accent btn-sm" id="poolTestBtn">Testi Başlat</button></div><div class="pool-soru-list">${currentPool.map((q, i) => `<div class="card card-pad" style="margin-bottom:10px;"><strong>${i + 1}. ${esc(q.question)}</strong><div class="alt" style="margin-top:6px;">${esc(q.subject || "")} · ${esc(q.topic || "")}</div></div>`).join("")}</div>`;
     document.querySelector("#poolTestBtn")?.addEventListener("click", () => {
       if (typeof testModalBaslat === "function") testModalBaslat(currentPool, `📚 Soru Havuzu (${currentPool.length} Soru)`);
-      else toast("Test ekranı henüz hazır değil.");
+      else if (typeof toast === "function") toast("Test ekranı henüz hazır değil.");
     });
   }
 
   window.renderSoruHavuzu = poolPageAc;
-  document.addEventListener("click", (event) => {
-    const btn = event.target.closest?.("[data-page='soru-havuzu']");
-    if (!btn) return;
-    event.preventDefault();
-    event.stopImmediatePropagation();
-    poolPageAc();
-  }, true);
 })();
