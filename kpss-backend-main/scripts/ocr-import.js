@@ -18,12 +18,10 @@ function year(name) {
   return m ? Number(m[0]) : null;
 }
 
-// Windows/Tesseract/PDF pipelines can occasionally produce UTF-8 text that was
-// decoded once as Latin-1/Windows-1252. Repair that common mojibake safely.
 function fixEncoding(value) {
   let s = String(value || '');
   for (let i = 0; i < 2; i++) {
-    if (!/[ÃÂÄÅÅÆÐÑÖÜÝÞß]|â€|ðŸ|\uFFFD/.test(s)) break;
+    if (!/[ÃÂÄÅÆÐÑÖÜÝÞß]|â€|ðŸ|\uFFFD/.test(s)) break;
     try {
       const repaired = Buffer.from(s, 'latin1').toString('utf8');
       if (!repaired || repaired === s) break;
@@ -50,8 +48,6 @@ function lesson(s, current) {
   return current || 'Belirlenmemiş';
 }
 
-// Only use an answer when the OCR text explicitly contains an answer label.
-// Do not assign one page's answer to every question on that page.
 function answer(s) {
   const m = s.match(/(?:DOĞRU\s*CEVAP|CEVAP)\s*[:：]?\s*([ABCDE])/i);
   return m ? m[1].toUpperCase() : null;
@@ -59,7 +55,6 @@ function answer(s) {
 
 function options(body) {
   const out = { A: '', B: '', C: '', D: '', E: '' };
-  // OCR may collapse option lines into a single line, so do not require \n.
   const re = /(?:^|\s)([ABCDE])\s*[\)\.:]\s*/gi;
   const marks = [];
   let m;
@@ -86,7 +81,7 @@ function parse(text, y, les) {
 
     const start = ms[i].index + ms[i][0].length;
     const end = i + 1 < ms.length ? ms[i + 1].index : t.length;
-    let body = t.slice(start, end)
+    const body = t.slice(start, end)
       .replace(/Diğer sayfaya geçiniz\.?/gi, '')
       .trim();
 
@@ -99,16 +94,13 @@ function parse(text, y, les) {
 
     if (q.length < 20) continue;
 
-    const opts = options(body);
-    const explicitAnswer = answer(body);
-
     out.push({
       yil: y,
       ders: les,
       soruNo: n,
       soru: q,
-      options: opts,
-      correctAnswer: explicitAnswer,
+      options: options(body),
+      correctAnswer: answer(body),
       topic: 'Belirlenmemiş',
       source: `KPSS ${y} Ortaöğretim`
     });
@@ -159,8 +151,8 @@ function ocr(image) {
     for (let p = 1; p <= pages; p++) {
       const img = path.join(IMG_DIR, `${prefix}-page-${p}.png`);
       const txt = path.join(TXT_DIR, `${prefix}-page-${p}.txt`);
-
       let s;
+
       if (!FORCE_REOCR && fs.existsSync(txt)) {
         s = fs.readFileSync(txt, 'utf8');
       } else {
@@ -189,8 +181,8 @@ function ocr(image) {
         yil: y,
         kaynakDosya: file,
         soruSayisi: questions.length,
-        genelyetenek: gy,
-        genelkultur: gk,
+        genelYetenek: gy,
+        genelKultur: gk,
         cevapliSoruSayisi: questions.filter(q => q.correctAnswer).length,
         sorular: questions
       }, null, 2),
