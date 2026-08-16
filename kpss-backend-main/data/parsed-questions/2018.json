@@ -1,0 +1,75 @@
+{
+  "yil": 2018,
+  "kaynakDosya": "TemelSoruKitapcik09102018.pdf",
+  "soruSayisi": 4,
+  "genelYetenek": 1,
+  "genelKultur": 3,
+  "cevapliSoruSayisi": 4,
+  "cevapAnahtariVarMi": true,
+  "sorular": [
+    {
+      "yil": 2018,
+      "ders": "Genel Kültür",
+      "soruNo": 13,
+      "soru": "15. Mehmet Akif Ersoy, İstiklal Marşı’nı aşağıdakilerden hangisine ithaf ederek kaleme almıştır? Yüce milletimize Gençlerimize Kahraman ordumuza Şehitlerimize TBMM’ye 16. 17.",
+      "options": {
+        "A": "B) C",
+        "B": "",
+        "C": "D) E",
+        "D": "",
+        "E": "18. Diğer sayfaya geçiniz. 21"
+      },
+      "correctAnswer": "C",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2018 Ortaöğretim"
+    },
+    {
+      "yil": 2018,
+      "ders": "Genel Kültür",
+      "soruNo": 42,
+      "soru": "44. Türkiye’nin bazı komşuları ile sınır kapılarının verildiği aşağıdaki eşleştirmelerden hangisi doğrudur? Gürcistan - Sarp İran - Kapıkule Irak - Gürbulak Suriye - İpsala Ermenistan - Habur 1982 Anayasası’na göre, en az kaç yaşını dolduran Türk vatandaşları milletvekili seçilebilirler? 17 18 20 21 25 45.",
+      "options": {
+        "A": "B) C) D) E) 48. Diğer sayfaya geçiniz. 26",
+        "B": "",
+        "C": "D) E",
+        "D": "",
+        "E": "46. 47. A"
+      },
+      "correctAnswer": "B",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2018 Ortaöğretim"
+    },
+    {
+      "yil": 2018,
+      "ders": "Genel Kültür",
+      "soruNo": 55,
+      "soru": "57. Geleneksel Kırkpınar Yağlı Güreşleri aşağıdaki illerin hangisinde düzenlenmektedir? Kırklareli Tekirdağ Bursa Edirne Bilecik 58. 59. 60.",
+      "options": {
+        "A": "B) C) D",
+        "B": "",
+        "C": "",
+        "D": "E) TEST BİTTİ. CEVAPLARINIZI KONTROL EDİNİZ. 28",
+        "E": ""
+      },
+      "correctAnswer": "D",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2018 Ortaöğretim"
+    },
+    {
+      "yil": 2018,
+      "ders": "Genel Yetenek",
+      "soruNo": 32,
+      "soru": "işleminin sonucu kaçtır? 34. 35.",
+      "options": {
+        "A": "",
+        "B": "",
+        "C": "",
+        "D": "",
+        "E": ""
+      },
+      "correctAnswer": "B",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2018 Ortaöğretim"
+    }
+  ]
+}

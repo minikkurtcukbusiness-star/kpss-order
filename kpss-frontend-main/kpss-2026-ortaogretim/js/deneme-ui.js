@@ -28,10 +28,9 @@ async function gercekDenemeBaslat() {
   const istekler = gercekDenemeIstekleriOlustur();
   modalAc("Deneme Hazırlanıyor", `
     <div style="text-align:center;padding:20px 0">
-      <div class="alt">20 soruluk gerçek deneme hazırlanıyor. Yapay zekâ 4 paket halinde soru üretiyor.</div>
+      <div>20 soruluk gerçek deneme hazırlanıyor</div>
       <div class="progress-track" style="margin-top:18px"><div class="progress-fill" id="denemeHazirlikBar" style="width:5%"></div></div>
-      <div id="denemeHazirlikMetni" style="margin-top:10px;font-weight:600">Deneme sunucudan hazırlanıyor…</div>
-      <div class="alt" style="margin-top:8px">Bu işlem birkaç dakika sürebilir; pencereyi kapatma.</div>
+      <div id="denemeHazirlikMetni" style="margin-top:10px;font-weight:600">Sunucudan hazırlanıyor…</div>
     </div>`, "");
 
   try {

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Navigation Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #00ff00;
+    }
+    .test-section {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 2px solid #00ff00;
+      background: rgba(0, 255, 0, 0.05);
+    }
+    .test-section h3 { margin-top: 0; color: #ffff00; }
+    .test-result {
+      padding: 10px;
+      margin: 5px 0;
+      border: 1px solid #00ff00;
+    }
+    .test-result.success { background: rgba(0, 255, 0, 0.2); }
+    .test-result.error { background: rgba(255, 0, 0, 0.2); }
+    button {
+      padding: 15px 30px;
+      font-size: 16px;
+      background: #00ff00;
+      color: #000;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover { background: #00cc00; }
+    button:disabled { background: #444; color: #888; cursor: not-allowed; }
+    .console-log {
+      height: 200px;
+      overflow-y: auto;
+      background: #000;
+      padding: 10px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .console-log .error { color: #ff4444; }
+    .console-log .success { color: #00ff00; }
+    .console-log .info { color: #00ccff; }
+    .console-log .warn { color: #ffcc00; }
+  </style>
+</head>
+<body>
+  <h1>🧪 NAVİGASYON TEST SİSTEMİ</h1>
+
+  <div class="test-section">
+    <h3>Test Akışı</h3>
+    <p>1. Ana Sayfa → Ders Çalış → Dersler → Plan → Denemeler → İlerleme → Güncel Bilgiler → Soru Havuzu → Ayarlar → Ana Sayfa</p>
+  </div>
+
+  <button id="startTest">START TEST</button>
+
+  <div class="console-log" id="console"></div>
+
+  <script>
+    const consoleEl = document.getElementById('console');
+
+    function log(message, type = 'info') {
+      const div = document.createElement('div');
+      div.className = type;
+      const time = new Date().toLocaleTimeString();
+      div.textContent = `[${time}] ${message}`;
+      consoleEl.appendChild(div);
+      consoleEl.scrollTop = consoleEl.scrollHeight;
+      console.log(message);
+    }
+
+    function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    document.getElementById('startTest').addEventListener('click', async function() {
+      this.disabled = true;
+      consoleEl.innerHTML = '';
+
+      const tests = [
+        { name: 'Ana Sayfa', page: 'anasayfa' },
+        { name: 'Ders Çalış', page: 'calisma' },
+        { name: 'Dersler', page: 'dersler' },
+        { name: 'Plan', page: 'plan' },
+        { name: 'Denemeler', page: 'denemeler' },
+        { name: 'İlerleme', page: 'istatistik' },
+        { name: 'Güncel Bilgiler', page: 'guncel' },
+        { name: 'Soru Havuzu', page: 'soru-havuzu' },
+        { name: 'Ayarlar', page: 'ayarlar' },
+        { name: 'Ana Sayfa (tekrar)', page: 'anasayfa' }
+      ];
+
+      let passed = 0;
+      let failed = 0;
+
+      for (let i = 0; i < tests.length; i++) {
+        const test = tests[i];
+        log(`\n🔍 TEST ${i + 1}/${tests.length}: ${test.name}`, 'info');
+
+        try {
+          // Find and click button
+          const btn = document.querySelector(`.nav-item[data-page="${test.page}"]`);
+          if (!btn) {
+            throw new Error(`Buton bulunamadı: ${test.page}`);
+          }
+
+          log(`  -> Butona tıklanıyor: ${btn.dataset.page}`, 'info');
+
+          btn.click();
+
+          // Wait for page change
+          await sleep(500);
+
+          // Check if page is active
+          const page = document.getElementById(`page-${test.page}`);
+          if (!page) {
+            throw new Error(`Sayfa elementi bulunamadı: ${test.page}`);
+          }
+
+          const isActive = page.classList.contains('active');
+          const contentLength = page.innerHTML.length;
+
+          if (isActive) {
+            log(`  ✅ BAŞARILI: ${test.page} aktif (İçerik uzunluğu: ${contentLength} karakter)`, 'success');
+            passed++;
+          } else {
+            throw new Error(`${test.page} aktif değil!`);
+          }
+
+          // Check console for errors
+          if (window.consoleErrors && window.consoleErrors.length > 0) {
+            log(`  ⚠️  HATALAR: ${window.consoleErrors.length} tane konsol hatası var`, 'warn');
+          }
+
+        } catch (error) {
+          log(`  ❌ BAŞARISIZ: ${error.message}`, 'error');
+          failed++;
+        }
+      }
+
+      log(`\n${'='.repeat(60)}`, 'info');
+      log(`📊 SONUÇ: ${passed} BAŞARILI, ${failed} BAŞARISIZ`, failed === 0 ? 'success' : 'error');
+      log(`BAŞARI ORANI: ${((passed / tests.length) * 100).toFixed(1)}%`, 'info');
+
+      if (failed === 0) {
+        log('\n✅ TÜM TESTLER GEÇTİ!', 'success');
+      } else {
+        log('\n❌ BAZI TESTLER BAŞARISIZ!', 'error');
+      }
+
+      // Enable button again
+      this.disabled = false;
+    });
+
+    // Capture console errors
+    const originalError = console.error;
+    window.consoleErrors = [];
+    console.error = function(...args) {
+      window.consoleErrors.push(args.join(' '));
+      originalError.apply(console, args);
+      log(`  ⚠️  Konsol Hatası: ${args.join(' ')}`, 'error');
+    };
+  </script>
+</body>
+</html>

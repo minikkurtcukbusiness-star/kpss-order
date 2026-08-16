@@ -31,7 +31,7 @@ function calismaSayfasiniAc() {
 }
 
 function renderCalisma() {
-  const ozet = calismaOzet();
+  const ozet = { yuzde: 0, toplam: 0, aktif: 0, tamam: 0, tekrar: 0 };
   $("#page-calisma").innerHTML = `
     <div class="study-hero"><div><div class="study-eyebrow">🎯 ÇALIŞMA MERKEZİ</div><h1>Bugün ne çalışıyoruz?</h1><p>Konunu seç, kısa bir hedef koy ve ilerlemeni işaretle.</p></div><div class="study-hero-score"><strong>%${ozet.yuzde}</strong><span>Konu tamamlandı</span></div></div>
     <div class="study-quick-grid"><div class="study-stat"><span>📚</span><strong>${ozet.toplam}</strong><small>Toplam konu</small></div><div class="study-stat"><span>🔥</span><strong>${ozet.aktif}</strong><small>Şu an çalışılan</small></div><div class="study-stat"><span>✅</span><strong>${ozet.tamam}</strong><small>Tamamlanan</small></div><div class="study-stat"><span>🔁</span><strong>${ozet.tekrar}</strong><small>Tekrar bekleyen</small></div></div>

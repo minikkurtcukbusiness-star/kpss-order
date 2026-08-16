@@ -57,7 +57,6 @@ body {
   font-size: 15px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
-  transition: background .2s ease, color .2s ease;
 }
 h1, h2, h3, h4 { font-family: var(--font-display); margin: 0; color: var(--ink); letter-spacing: -0.01em; }
 p { margin: 0; }
@@ -95,7 +94,7 @@ a { color: var(--primary); }
   width: 100%; display: flex; align-items: center; gap: 11px;
   background: transparent; border: none; color: var(--ink-soft);
   padding: 10px 12px; border-radius: var(--radius-sm); font-size: 14.5px; font-weight: 500;
-  text-align: left; transition: background .15s, color .15s;
+  text-align: left;
 }
 .nav-ico { font-size: 13px; width: 16px; text-align: center; color: var(--ink-faint); }
 .nav-item:hover { background: var(--surface-alt); color: var(--ink); }
@@ -110,9 +109,8 @@ a { color: var(--primary); }
 .tema-toggle:hover { color: var(--ink); }
 
 .content { padding: 28px 34px 90px; max-width: 1120px; }
-.page { display: none; animation: fadeIn .25s ease; }
+.page { display: none; }
 .page.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(4px);} to { opacity: 1; transform: translateY(0);} }
 
 .bottom-nav { display: none; }
 
@@ -142,14 +140,14 @@ a { color: var(--primary); }
 .stat-card .sub { font-size: 12.5px; color: var(--ink-faint); }
 
 .progress-track { background: var(--surface-alt); border-radius: 20px; height: 8px; overflow: hidden; margin-top: 4px; }
-.progress-fill { height: 100%; background: var(--primary); border-radius: 20px; transition: width .3s ease; }
+.progress-fill { height: 100%; background: var(--primary); border-radius: 20px; }
 .progress-fill.accent { background: var(--accent); }
 .progress-fill.success { background: var(--success); }
 
 .btn {
   display: inline-flex; align-items: center; gap: 6px; justify-content: center;
   border-radius: var(--radius-sm); border: 1px solid transparent; padding: 9px 16px;
-  font-size: 13.5px; font-weight: 600; transition: all .15s ease; white-space: nowrap;
+  font-size: 13.5px; font-weight: 600; white-space: nowrap;
 }
 .btn-primary { background: var(--primary); color: #fff; }
 .btn-primary:hover { background: var(--primary-dark); }
@@ -258,8 +256,8 @@ tbody tr:hover { background: var(--surface-alt); }
 .tekrar-item .yol { color: var(--ink-faint); }
 
 /* ============ DERSLER ============ */
-.ders-card { padding: 17px 19px; cursor: pointer; transition: transform .12s ease, box-shadow .12s ease; }
-.ders-card:hover { transform: translateY(-2px); }
+.ders-card { padding: 17px 19px; cursor: pointer; }
+.ders-card:hover { }
 .ders-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
 .ders-dot { width: 10px; height: 10px; border-radius: 50%; }
 .ders-name { font-family: var(--font-display); font-weight: 700; font-size: 16px; }
@@ -304,7 +302,7 @@ tbody tr:hover { background: var(--surface-alt); }
 .toast {
   position: fixed; bottom: 22px; left: 50%; transform: translateX(-50%) translateY(20px);
   background: var(--ink); color: var(--bg); padding: 11px 18px; border-radius: 30px;
-  font-size: 13.5px; font-weight: 600; opacity: 0; pointer-events: none; transition: all .25s ease; z-index: 80;
+  font-size: 13.5px; font-weight: 600; opacity: 0; pointer-events: none; z-index: 80;
   box-shadow: 0 10px 30px rgba(0,0,0,.25);
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
@@ -328,8 +326,8 @@ tbody tr:hover { background: var(--surface-alt); }
 .settings-block h3 { font-size: 13.5px; margin-bottom: 12px; color: var(--ink-soft); text-transform: uppercase; letter-spacing: .04em; }
 .switch { position: relative; width: 42px; height: 24px; flex-shrink: 0; }
 .switch input { opacity: 0; width: 0; height: 0; }
-.switch .track { position: absolute; inset: 0; background: var(--border); border-radius: 20px; transition: .2s; }
-.switch .track::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .2s; }
+.switch .track { position: absolute; inset: 0; background: var(--border); border-radius: 20px; }
+.switch .track::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; }
 .switch input:checked + .track { background: var(--primary); }
 .switch input:checked + .track::before { transform: translateX(18px); }
 .settings-row { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border); }

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerçek Tarayıcı Testi - Navigasyon</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #00ff00;
+    }
+    .test-section {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #00ff00;
+    }
+    .test-pass { color: #00ff00; }
+    .test-fail { color: #ff0000; }
+    .test-error { color: #ffff00; }
+    .test-info { color: #00ffff; }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 14px;
+    }
+    .results {
+      margin-top: 30px;
+      padding: 15px;
+      border: 2px solid #00ff00;
+      background: rgba(0, 255, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <h1>🧪 NAVİGASYON TEST SENARYOSU</h1>
+
+  <div class="test-section">
+    <h2>1. HTML STRUCTURE CHECK</h2>
+    <button id="test1">Run Test 1</button>
+    <div id="result1" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>2. EVENT LISTENER CHECK</h2>
+    <button id="test2">Run Test 2</button>
+    <div id="result2" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>3. SAYFA GEC FUNCTION</h2>
+    <button id="test3">Run Test 3</button>
+    <div id="result3" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>4. RENDER SAYFA FUNCTION</h2>
+    <button id="test4">Run Test 4</button>
+    <div id="result4" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>5. CALİŞMA SAYFASI RENDER</h2>
+    <button id="test5">Run Test 5</button>
+    <div id="result5" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>6. SORU HAVUZU RENDER</h2>
+    <button id="test6">Run Test 6</button>
+    <div id="result6" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>7. NAV BAGLANTILARI KUR</h2>
+    <button id="test7">Run Test 7</button>
+    <div id="result7" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>8. TÜM SAYFALAR AÇILIYOR MU?</h2>
+    <button id="test8">Run Test 8</button>
+    <div id="result8" class="test-info"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>9. TEST ZİNCİRİ (Ana Sayfa → Dersler → Ders Çalış → Soru Havuzu → Ayarlar)</h2>
+    <button id="test9">Run Test 9</button>
+    <div id="result9" class="test-info"></div>
+  </div>
+
+  <div class="results" id="finalResults">
+    <h2>📊 SONUÇLAR</h2>
+    <div id="summary"></div>
+  </div>
+
+  <script>
+    let testsRun = 0;
+    let testsPassed = 0;
+    let testsFailed = 0;
+
+    function log(id, message, type) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.innerHTML = `<span class="test-${type}">${message}</span>`;
+      }
+    }
+
+    function setResult(id, passed, message) {
+      log(id, `${passed ? '✅' : '❌'} ${message}`, passed ? 'pass' : 'fail');
+      if (passed) testsPassed++; else testsFailed++;
+      testsRun++;
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const summary = document.getElementById('summary');
+      summary.innerHTML = `
+        <p>Toplam Test: ${testsRun}</p>
+        <p>Başarılı: ${testsPassed}</p>
+        <p>Başarısız: ${testsFailed}</p>
+        <p>Başarı Oranı: ${((testsPassed / testsRun) * 100).toFixed(2)}%</p>
+        <p>─────────────────</p>
+        <p>Tamamlandı mı? ${testsFailed === 0 ? '✅ EVET' : '❌ HAYIR'}</p>
+      `;
+    }
+
+    // TEST 1: HTML STRUCTURE CHECK
+    document.getElementById('test1').onclick = async () => {
+      const btns = document.querySelectorAll('.nav-item');
+      const pages = document.querySelectorAll('.page');
+      const bottomNav = document.querySelector('.bottom-nav');
+
+      log('result1', 'Testing HTML structure...', 'info');
+
+      const allButtons = btns.length === 9;
+      const allPages = pages.length === 9;
+      const hasBottomNav = !!bottomNav;
+      const hasSoruHavuzu = Array.from(pages).some(p => p.dataset.page === 'soru-havuzu');
+
+      log('result1', `Nav items: ${btns.length} (${allButtons ? '✅' : '❌'})`, allButtons ? 'pass' : 'fail');
+      log('result1', `Pages: ${pages.length} (${allPages ? '✅' : '❌'})`, allPages ? 'pass' : 'fail');
+      log('result1', `Bottom nav: ${hasBottomNav ? '✅' : '❌'}`, hasBottomNav ? 'pass' : 'fail');
+      log('result1', `Soru Havuzu: ${hasSoruHavuzu ? '✅' : '❌'}`, hasSoruHavuzu ? 'pass' : 'fail');
+
+      setResult('result1', allButtons && allPages && hasBottomNav && hasSoruHavuzu, 'HTML yapısı doğru');
+    };
+
+    // TEST 2: EVENT LISTENER CHECK
+    document.getElementById('test2').onclick = () => {
+      log('result2', 'Testing event listeners...', 'info');
+
+      const btns = document.querySelectorAll('.nav-item');
+      let listenerCount = 0;
+      let allHaveListeners = true;
+
+      btns.forEach((btn, i) => {
+        if (!btn.onclick) {
+          log('result2', `Button ${i} (${btn.dataset.page}): ❌ Listener yok`, 'fail');
+          allHaveListeners = false;
+        } else {
+          log('result2', `Button ${i} (${btn.dataset.page}): ✅ Listener var`, 'pass');
+          listenerCount++;
+        }
+      });
+
+      log('result2', `Listener count: ${listenerCount} / ${btns.length}`, listenerCount === btns.length ? 'pass' : 'fail');
+
+      setResult('result2', allHaveListeners, 'Tüm butonlarda listener var');
+    };
+
+    // TEST 3: SAYFA GEC FUNCTION
+    document.getElementById('test3').onclick = () => {
+      log('result3', 'Testing sayfaGec function...', 'info');
+
+      if (typeof sayfaGec === 'function') {
+        log('result3', '✅ sayfaGec fonksiyonu tanımlı', 'pass');
+
+        // Test et
+        const pageBefore = document.querySelector('.page.active')?.dataset.page;
+
+        sayfaGec('dersler');
+
+        const pageAfter = document.querySelector('.page.active')?.dataset.page;
+
+        log('result3', `Page before: ${pageBefore || 'YOK'}`, pageBefore ? 'pass' : 'fail');
+        log('result3', `Page after: ${pageAfter || 'YOK'}`, pageAfter === 'dersler' ? 'pass' : 'fail');
+
+        setResult('result3', pageAfter === 'dersler', 'sayfaGec çalışıyor');
+      } else {
+        log('result3', '❌ sayfaGec fonksiyonu tanımlı değil', 'fail');
+        setResult('result3', false, 'sayfaGec bulunamadı');
+      }
+    };
+
+    // TEST 4: RENDER SAYFA FUNCTION
+    document.getElementById('test4').onclick = () => {
+      log('result4', 'Testing renderSayfa function...', 'info');
+
+      if (typeof renderSayfa === 'function') {
+        log('result4', '✅ renderSayfa fonksiyonu tanımlı', 'pass');
+
+        const pagesToTest = ['anasayfa', 'dersler', 'calisma', 'soru-havuzu', 'ayarlar'];
+        let allPassed = true;
+
+        pagesToTest.forEach(pageId => {
+          log('result4', `Testing renderSayfa('${pageId}')...`, 'info');
+
+          try {
+            renderSayfa(pageId);
+
+            const page = document.getElementById(`page-${pageId}`);
+            const isActive = page?.classList.contains('active');
+            const contentLength = page?.innerHTML.length;
+
+            log('result4', `  Page exists: ${!!page} (${contentLength ? contentLength + ' chars' : 'YOK'})`, page ? 'pass' : 'fail');
+            log('result4', `  Page active: ${isActive}`, isActive ? 'pass' : 'fail');
+
+            if (!isActive) allPassed = false;
+          } catch (e) {
+            log('result4', `  ❌ ERROR: ${e.message}`, 'fail');
+            allPassed = false;
+          }
+        });
+
+        setResult('result4', allPassed, 'Tüm sayfalar render ediliyor');
+      } else {
+        log('result4', '❌ renderSayfa fonksiyonu tanımlı değil', 'fail');
+        setResult('result4', false, 'renderSayfa bulunamadı');
+      }
+    };
+
+    // TEST 5: CALİŞMA SAYFASI RENDER
+    document.getElementById('test5').onclick = () => {
+      log('result5', 'Testing renderCalisma function...', 'info');
+
+      if (typeof renderCalisma === 'function') {
+        log('result5', '✅ renderCalisma fonksiyonu tanımlı', 'pass');
+
+        renderCalisma();
+
+        const page = document.querySelector('#page-calisma');
+        const isActive = page?.classList.contains('active');
+        const contentLength = page?.innerHTML.length;
+
+        log('result5', `Page exists: ${!!page}`, page ? 'pass' : 'fail');
+        log('result5', `Page active: ${isActive}`, isActive ? 'pass' : 'fail');
+        log('result5', `Content length: ${contentLength || 0}`, contentLength > 0 ? 'pass' : 'fail');
+
+        setResult('result5', page && isActive && contentLength > 0, 'renderCalisma çalışıyor');
+      } else {
+        log('result5', '❌ renderCalisma fonksiyonu tanımlı değil', 'fail');
+        setResult('result5', false, 'renderCalisma bulunamadı');
+      }
+    };
+
+    // TEST 6: SORU HAVUZU RENDER
+    document.getElementById('test6').onclick = () => {
+      log('result6', 'Testing renderSoruHavuzu function...', 'info');
+
+      if (typeof window.renderSoruHavuzu === 'function') {
+        log('result6', '✅ renderSoruHavuzu fonksiyonu tanımlı', 'pass');
+
+        window.renderSoruHavuzu();
+
+        const page = document.querySelector('#page-soru-havuzu');
+        const isActive = page?.classList.contains('active');
+        const contentLength = page?.innerHTML.length;
+
+        log('result6', `Page exists: ${!!page}`, page ? 'pass' : 'fail');
+        log('result6', `Page active: ${isActive}`, isActive ? 'pass' : 'fail');
+        log('result6', `Content length: ${contentLength || 0}`, contentLength > 0 ? 'pass' : 'fail');
+
+        setResult('result6', page && isActive && contentLength > 0, 'renderSoruHavuzu çalışıyor');
+      } else {
+        log('result6', '❌ renderSoruHavuzu fonksiyonu tanımlı değil', 'fail');
+        setResult('result6', false, 'renderSoruHavuzu bulunamadı');
+      }
+    };
+
+    // TEST 7: NAV BAGLANTILARI KUR
+    document.getElementById('test7').onclick = () => {
+      log('result7', 'Testing navBaglantilariniKur function...', 'info');
+
+      if (typeof navBaglantilariniKur === 'function') {
+        log('result7', '✅ navBaglantilariniKur fonksiyonu tanımlı', 'pass');
+
+        try {
+          navBaglantilariniKur();
+
+          const btns = document.querySelectorAll('.nav-item');
+          let listenerCount = 0;
+
+          btns.forEach(btn => {
+            if (btn.onclick) listenerCount++;
+          });
+
+          log('result7', `Listener count: ${listenerCount} / ${btns.length}`, listenerCount === btns.length ? 'pass' : 'fail');
+
+          setResult('result7', listenerCount === btns.length, 'Tüm butonlara listener eklendi');
+        } catch (e) {
+          log('result7', `❌ ERROR: ${e.message}`, 'fail');
+          setResult('result7', false, 'Nav bağlantıları kurulamadı');
+        }
+      } else {
+        log('result7', '❌ navBaglantilariniKur fonksiyonu tanımlı değil', 'fail');
+        setResult('result7', false, 'navBaglantilariniKur bulunamadı');
+      }
+    };
+
+    // TEST 8: TÜM SAYFALAR AÇILIYOR MU?
+    document.getElementById('test8').onclick = () => {
+      log('result8', 'Testing all pages...', 'info');
+
+      const pagesToTest = ['anasayfa', 'calisma', 'dersler', 'plan', 'denemeler', 'istatistik',
+                           'guncel', 'ayarlar', 'soru-havuzu'];
+
+      let allExist = true;
+      let allHaveContent = true;
+
+      pagesToTest.forEach(pageId => {
+        const page = document.getElementById(`page-${pageId}`);
+        const isActive = page?.classList.contains('active');
+        const contentLength = page?.innerHTML.length;
+
+        log('result8', `  ${pageId}: exists=${!!page}, active=${isActive}, content=${contentLength}`, page && isActive && contentLength > 0 ? 'pass' : 'fail');
+
+        if (!page) allExist = false;
+        if (!isActive) allExist = false;
+        if (contentLength === 0) allHaveContent = false;
+      });
+
+      setResult('result8', allExist && allHaveContent, 'Tüm sayfalar açılıyor');
+    };
+
+    // TEST 9: TEST ZİNCİRİ
+    document.getElementById('test9').onclick = async () => {
+      log('result9', 'Running test sequence...', 'info');
+
+      const sequence = [
+        { name: 'Ana Sayfa', page: 'anasayfa' },
+        { name: 'Dersler', page: 'dersler' },
+        { name: 'Ders Çalış', page: 'calisma' },
+        { name: 'Soru Havuzu', page: 'soru-havuzu' },
+        { name: 'Ayarlar', page: 'ayarlar' },
+      ];
+
+      let allPassed = true;
+
+      for (const test of sequence) {
+        log('result9', `Testing: ${test.name}...`, 'info');
+
+        const btn = document.querySelector(`.nav-item[data-page="${test.page}"]`);
+        if (!btn) {
+          log('result9', `  ❌ Button not found: ${test.name}`, 'fail');
+          allPassed = false;
+          continue;
+        }
+
+        btn.click();
+        await new Promise(r => setTimeout(r, 500));
+
+        const page = document.querySelector(`#page-${test.page}`);
+        const isActive = page?.classList.contains('active');
+
+        log('result9', `  Page active: ${isActive}`, isActive ? 'pass' : 'fail');
+
+        if (!isActive) {
+          allPassed = false;
+        }
+      }
+
+      setResult('result9', allPassed, 'Test zinciri tamamlandı');
+    };
+  </script>
+</body>
+</html>

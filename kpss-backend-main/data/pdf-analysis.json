@@ -1,0 +1,326 @@
+[
+  {
+    "dosya": "2014KPSSOrtaogretim.txt",
+    "yil": "2014",
+    "karakterSayisi": 48259,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu kitapçıkta Kamu Personel Seçme Sınavı (Ortaöğ-"
+      },
+      {
+        "numara": 2,
+        "baslangic": "Bu testler için verilen toplam cevaplama süresi"
+      },
+      {
+        "numara": 3,
+        "baslangic": "Genel Yetenek Testi ve Genel Kültür Testinin her"
+      },
+      {
+        "numara": 4,
+        "baslangic": "Bu kitapçıktaki testlerde yer alan her sorunun sadece bir"
+      },
+      {
+        "numara": 5,
+        "baslangic": "İşaretlediğiniz bir cevabı değiştirmek istediğinizde, sil-"
+      },
+      {
+        "numara": 6,
+        "baslangic": "Bu testler puanlanırken doğru cevaplarınızın sayısın-"
+      },
+      {
+        "numara": 7,
+        "baslangic": "Cevaplamaya istediğiniz sorudan başlayabilirsiniz. Bir"
+      },
+      {
+        "numara": 8,
+        "baslangic": "Sınavda uyulacak diğer kurallar bu kitapçığın arka ka-"
+      },
+      {
+        "numara": 9,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 10,
+        "baslangic": "A) B) C) D) E)"
+      }
+    ]
+  },
+  {
+    "dosya": "2016KPSSOrtaogretimDuzeyiTemel20112016.txt",
+    "yil": "2016",
+    "karakterSayisi": 45174,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu testte 60 soru vardır."
+      },
+      {
+        "numara": 2,
+        "baslangic": "Cevaplarınızı, cevap kâğıdının Genel Yetenek Testi için ayrılan kısmına işaretleyiniz."
+      },
+      {
+        "numara": 3,
+        "baslangic": "A) B)"
+      },
+      {
+        "numara": 4,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 5,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 6,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 7,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 8,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 9,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 10,
+        "baslangic": "A)"
+      }
+    ]
+  },
+  {
+    "dosya": "2020_KPSS_Ortaogretim.txt",
+    "yil": "2020",
+    "karakterSayisi": 48523,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu testte 60 soru vardır."
+      },
+      {
+        "numara": 2,
+        "baslangic": "Cevaplarınızı, cevap kâğıdının Genel Yetenek Testi için ayrılan kısmına işaretleyiniz."
+      },
+      {
+        "numara": 3,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 4,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 5,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 6,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 7,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 8,
+        "baslangic": "A) B)"
+      },
+      {
+        "numara": 9,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 10,
+        "baslangic": "A) B) C) D) E)"
+      }
+    ]
+  },
+  {
+    "dosya": "TemelSoruKitapcik09102018.txt",
+    "yil": "2018",
+    "karakterSayisi": 6892,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu testte 60 soru vardır."
+      },
+      {
+        "numara": 2,
+        "baslangic": "Cevaplarınızı, cevap kâğıdının Genel Yetenek Testi için ayrılan kısmına işaretleyiniz."
+      },
+      {
+        "numara": 3,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 4,
+        "baslangic": "Diğer sayfaya geçiniz."
+      },
+      {
+        "numara": 5,
+        "baslangic": "6."
+      },
+      {
+        "numara": 6,
+        "baslangic": "7."
+      },
+      {
+        "numara": 7,
+        "baslangic": "8."
+      },
+      {
+        "numara": 8,
+        "baslangic": "Diğer sayfaya geçiniz."
+      },
+      {
+        "numara": 9,
+        "baslangic": "10."
+      },
+      {
+        "numara": 10,
+        "baslangic": "A) B) C) D) E)"
+      }
+    ]
+  },
+  {
+    "dosya": "tsk06112022.txt",
+    "yil": "2022",
+    "karakterSayisi": 7830,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu testte 60 soru vardır."
+      },
+      {
+        "numara": 2,
+        "baslangic": "Cevaplarınızı, cevap kâğıdının Genel Yetenek Testi için ayrılan kısmına işaretleyiniz."
+      },
+      {
+        "numara": 3,
+        "baslangic": "4."
+      },
+      {
+        "numara": 4,
+        "baslangic": "Diğer sayfaya geçiniz."
+      },
+      {
+        "numara": 5,
+        "baslangic": "6."
+      },
+      {
+        "numara": 6,
+        "baslangic": "7."
+      },
+      {
+        "numara": 7,
+        "baslangic": "8."
+      },
+      {
+        "numara": 8,
+        "baslangic": "Diğer sayfaya geçiniz."
+      },
+      {
+        "numara": 9,
+        "baslangic": "10."
+      },
+      {
+        "numara": 10,
+        "baslangic": "A) B) C) D) E)"
+      }
+    ]
+  },
+  {
+    "dosya": "tsk15092024.txt",
+    "yil": "2024",
+    "karakterSayisi": 8222,
+    "tahminiSoruSayisi": 60,
+    "bolumler": [
+      "Genel Yetenek",
+      "Genel Kültür"
+    ],
+    "cevapAnahtariVarMi": true,
+    "encodingBozuk": true,
+    "ilkSorular": [
+      {
+        "numara": 1,
+        "baslangic": "Bu testte 60 soru vardır."
+      },
+      {
+        "numara": 2,
+        "baslangic": "Cevaplarınızı, cevap kâğıdının Genel Yetenek Testi için ayrılan kısmına işaretleyiniz."
+      },
+      {
+        "numara": 3,
+        "baslangic": "4."
+      },
+      {
+        "numara": 4,
+        "baslangic": "A)"
+      },
+      {
+        "numara": 5,
+        "baslangic": "Diğer sayfaya geçiniz."
+      },
+      {
+        "numara": 6,
+        "baslangic": "7."
+      },
+      {
+        "numara": 7,
+        "baslangic": "Venedikli denizciler, soda ve güherçile ticareti yaparken"
+      },
+      {
+        "numara": 8,
+        "baslangic": "9."
+      },
+      {
+        "numara": 9,
+        "baslangic": "A) B) C) D) E)"
+      },
+      {
+        "numara": 10,
+        "baslangic": "11."
+      }
+    ]
+  }
+]

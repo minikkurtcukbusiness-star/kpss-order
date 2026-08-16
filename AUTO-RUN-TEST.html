@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AUTO RUN TEST</title>
+  <script>
+    const fs = require('fs');
+    const path = require('path');
+
+    // Read the test script
+    const testScriptPath = 'REAL-BROWSER-TEST.js';
+    if (fs.existsSync(testScriptPath)) {
+      const testScript = fs.readFileSync(testScriptPath, 'utf-8');
+      document.body.innerHTML = `
+        <div style="font-family: monospace; padding: 20px; background: #1e1e1e; color: #00ff00;">
+          <h1>🚀 AUTO RUN TEST</h1>
+          <p style="color: #ffff00;">Test script yükleniyor...</p>
+          <pre id="console-output" style="white-space: pre-wrap; max-height: 70vh; overflow-y: auto; background: #000; padding: 15px; border: 1px solid #00ff00;"></pre>
+          <script>
+            (async () => {
+              const output = document.getElementById('console-output');
+              let logs = [];
+
+              // Override console.log
+              const originalLog = console.log;
+              console.log = (...args) => {
+                const msg = args.join(' ');
+                logs.push(msg);
+                output.textContent += msg + '\\n';
+                originalLog.apply(console, args);
+              };
+
+              // Inject test script
+              try {
+                const testScriptContent = fs.readFileSync('REAL-BROWSER-TEST.js', 'utf-8');
+                eval(testScriptContent);
+                output.textContent += '\\n✅ Test script injected!';
+              } catch (error) {
+                output.textContent += '\\n❌ ERROR: ' + error.message;
+              }
+            })();
+          <\/script>
+        </div>
+      `;
+    } else {
+      document.body.innerHTML = '<div style="font-family: monospace; padding: 20px; color: red;">Test script not found: REAL-BROWSER-TEST.js</div>';
+    }
+  </script>
+</head>
+<body>
+</body>
+</html>

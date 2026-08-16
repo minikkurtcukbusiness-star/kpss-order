@@ -1,0 +1,59 @@
+{
+  "yil": 2022,
+  "kaynakDosya": "tsk06112022.pdf",
+  "soruSayisi": 3,
+  "genelYetenek": 0,
+  "genelKultur": 3,
+  "cevapliSoruSayisi": 3,
+  "cevapAnahtariVarMi": true,
+  "sorular": [
+    {
+      "yil": 2022,
+      "ders": "Genel Kültür",
+      "soruNo": 20,
+      "soru": "22. Siyasal, sosyal ve kültürel alanlarda çağın gereklerine uygun olarak yapılan köklü değişikliklerle Türk toplumuna dinamizm kazandırmayı amaçlayan ilke aşağıdakilerden hangisidir? Milliyetçilik İnkılapçılık Halkçılık Devletçilik Cumhuriyetçilik 23.",
+      "options": {
+        "A": "B) C",
+        "B": "",
+        "C": "D) E",
+        "D": "",
+        "E": "24. 25. Diğer sayfaya geçiniz. 21"
+      },
+      "correctAnswer": "B",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2022 Ortaöğretim"
+    },
+    {
+      "yil": 2022,
+      "ders": "Genel Kültür",
+      "soruNo": 37,
+      "soru": "39. Türkiye’de çözünebilen kayaçların bulunduğu karstik alanlarda mağaralar görülür. Bu mağaralardan farklı ve çekici doğal güzelliklere sahip olanlar turizme açılmıştır. Buna göre aşağıdaki illerin hangisinde mağara turizminin gelişmiş ve yaygın olduğu söylenebilir? Adana Aydın Antalya İzmir Muğla 40.",
+      "options": {
+        "A": "B) C) D",
+        "B": "",
+        "C": "",
+        "D": "E) 41. 42. Diğer sayfaya geçiniz. 24",
+        "E": ""
+      },
+      "correctAnswer": "C",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2022 Ortaöğretim"
+    },
+    {
+      "yil": 2022,
+      "ders": "Genel Kültür",
+      "soruNo": 54,
+      "soru": "56. Geleneksel spor organizasyonu olan ve 2022 yılında “Gelenekten Geleceğe Bir’iz!” sloganıyla düzenlenen 4. Dünya Göçebe Oyunları aşağıdaki yerlerin hangisinde yapılmıştır? Bergama Fethiye İznik Alanya Sivrihisar 57. 58. 59.",
+      "options": {
+        "A": "B) C) D",
+        "B": "",
+        "C": "",
+        "D": "E) Diğer sayfaya geçiniz. 27",
+        "E": ""
+      },
+      "correctAnswer": "C",
+      "topic": "Belirlenmemiş",
+      "source": "KPSS 2022 Ortaöğretim"
+    }
+  ]
+}
