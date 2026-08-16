@@ -1,7 +1,7 @@
 /* Central OpenRouter provider. Free model IDs are kept current and validated. */
 const OPENROUTER_URL="https://openrouter.ai/api/v1/chat/completions";
 const FREE_MODELS=["google/gemma-4-26b-a4b-it:free","google/gemma-4-31b-it:free","nvidia/nemotron-3.5-lightning:free","poolside/laguna-s-2.1:free","openai/gpt-oss-20b:free","inclusionai/ling-3.0-flash:free","nvidia/nemotron-3-ultra-550b-a55b:free","qwen/qwen-2.5-72b-instruct:free","deepseek/deepseek-chat","deepseek/deepseek-r1"];
-const ATTEMPT_TIMEOUT_MS=45000;
+const ATTEMPT_TIMEOUT_MS=90000;
 function getApiKey(){const key=String(process.env.OPENROUTER_API_KEY||"").trim();if(!key)throw new Error("OPENROUTER_API_KEY Railway Variables bölümünde tanımlı değil.");return key;}
 function getModels(){const env=String(process.env.OPENROUTER_MODEL||"").trim();return env&&FREE_MODELS.includes(env)?[env,...FREE_MODELS.filter(x=>x!==env)]:[...FREE_MODELS];}
 function timeoutError(){const e=new Error("AI isteği zaman aşımına uğradı.");e.code="AI_TIMEOUT";return e;}
